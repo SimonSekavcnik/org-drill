@@ -722,7 +722,6 @@ CMD is bound, or nil if it is not bound to a key."
    (concat "[" (cdr org-time-stamp-formats) "]")
    time))
 
-
 (defun org-drill-map-entries (func &optional scope drill-match &rest skip)
   "Like `org-map-entries', but only drill entries are processed."
   (let ((org-drill-match (or drill-match org-drill-match)))
@@ -3075,12 +3074,13 @@ all drill items are considered to be due for review, unless they
 have been reviewed within the last `org-drill-cram-hours'
 hours."
   (interactive)
-  (setq (oref session cram-mode) t)
+  (when (and (boundp 'session) (object-of-class-p session 'org-drill-session-class))
+    (oset session cram-mode t)
+  (setq (oref session cram-mode) t))
   (org-drill scope drill-match))
 
 (defun org-drill-cram-tree ()
   "Run  an interactive drill session in 'cram mode' using subtree at point.
-
 See also, `org-drill-cram' and `org-drill-tree'."
   (interactive)
   (org-drill-cram 'tree))
